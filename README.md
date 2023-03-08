@@ -1,4 +1,4 @@
-# Style Transfer
+# style transfer
 
 1. Open the unity folder in the Assets section. 
 2. Double-click on the `Unit` asset.
