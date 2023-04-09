@@ -793,7 +793,7 @@ StructuredBuffer<float> decoder_g_r5_bn2_scale;
 	}
 
 
-#define DeifineResiduleInst(id, seq, r)	\
+#define DefineResiduleInst(id, seq, r)	\
 	int indx = StdID(id, width, depth);	\
 	float color = input_writable[indx];	\
 	float mean = decoder_conv0_statistic[id.z * 2];	\
@@ -1149,7 +1149,7 @@ void ResiduleNormal1_1(uint3 id: SV_DispatchThreadID) //id.z=256 16x16x256
 void ResiduleInst1_1(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
 {
 	uint width = 16, depth = 256;
-	DeifineResiduleInst(id, 1, 1);
+	DefineResiduleInst(id, 1, 1);
 	input_writable[indx] = input_writable[indx];
 }
 
@@ -1180,7 +1180,7 @@ void ResiduleNormal1_2(uint3 id: SV_DispatchThreadID) //id.xy=16 16x16x256
 void ResiduleInst1_2(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
 {
 	uint width = 16, depth = 256;
-	DeifineResiduleInst(id, 1, 2);
+	DefineResiduleInst(id, 1, 2);
 	input_writable[indx] += input_initial[indx];
 }
 
