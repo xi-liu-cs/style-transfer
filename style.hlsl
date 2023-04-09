@@ -776,7 +776,7 @@ StructuredBuffer<float> decoder_g_r5_bn2_scale;
 	RWStructuredBuffer<float> decoder_conv##seq##_statistic;	\
 
 
-#define DefineResiduleConv(id, input, output, seq, idx) \
+#define DefineResidualConv(id, input, output, seq, idx) \
 	for(int j = 0;j < depth; j++) \
 	{ 	\
 		float v = 0.0f;	\
@@ -793,7 +793,7 @@ StructuredBuffer<float> decoder_g_r5_bn2_scale;
 	}
 
 
-#define DefineResiduleInst(id, seq, r)	\
+#define DefineResidualInst(id, seq, r)	\
 	int indx = StdID(id, width, depth);	\
 	float color = input_writable[indx];	\
 	float mean = decoder_conv0_statistic[id.z * 2];	\
@@ -1063,14 +1063,14 @@ void StyleInstance5 (uint3 id : SV_DispatchThreadID) //id.xy=16 16x16x256
 }
 
 /* StyleDecoder.compute */
-#pragma kernel ResidulePad1_1
-#pragma kernel ResiduleConv1_1
-#pragma kernel ResiduleNormal1_1
-#pragma kernel ResiduleInst1_1
-#pragma kernel ResidulePad1_2
-#pragma kernel ResiduleConv1_2
-#pragma kernel ResiduleNormal1_2
-#pragma kernel ResiduleInst1_2
+#pragma kernel ResidualPad1_1
+#pragma kernel ResidualConv1_1
+#pragma kernel ResidualNormal1_1
+#pragma kernel ResidualInst1_1
+#pragma kernel ResidualPad1_2
+#pragma kernel ResidualConv1_2
+#pragma kernel ResidualNormal1_2
+#pragma kernel ResidualInst1_2
 #pragma kernel DecoderExpand1
 #pragma kernel DecoderConv1
 #pragma kernel DecoderNormal1
@@ -1119,11 +1119,11 @@ conv(pred)				256x256x3
 */
 
 /*
-residule-block
+Residual-block
 16x16x256->18x18x256->16x16x256
 */
 [numthreads(8,8,4)]
-void ResidulePad1_1(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
+void ResidualPad1_1(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
 {
 	uint pad = 1, width = 16, depth = 256;
 	if (StdCheckRange(id, width + 2 * pad)) return;
@@ -1132,29 +1132,29 @@ void ResidulePad1_1(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
 }
 
 [numthreads(8,8,1)]
-void ResiduleConv1_1(uint3 id: SV_DispatchThreadID) //id.xy=16 18x18x256->16x16x256
+void ResidualConv1_1(uint3 id: SV_DispatchThreadID) //id.xy=16 18x18x256->16x16x256
 {
 	int input = 18, output = 16, depth = 256;
-	DefineResiduleConv(id, input, output, 1, 1)
+	DefineResidualConv(id, input, output, 1, 1)
 }
 
 [numthreads(256,THREAD_Y_256Z,1)]
-void ResiduleNormal1_1(uint3 id: SV_DispatchThreadID) //id.z=256 16x16x256
+void ResidualNormal1_1(uint3 id: SV_DispatchThreadID) //id.z=256 16x16x256
 {
 	uint width = THREAD_Y_256Z, depth = 256, nwidth = 16;
 	StdDefineNormal(id, input_writable, decoder_conv0_statistic, width);
 }
 
 [numthreads(8,8,4)]
-void ResiduleInst1_1(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
+void ResidualInst1_1(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
 {
 	uint width = 16, depth = 256;
-	DefineResiduleInst(id, 1, 1);
+	DefineResidualInst(id, 1, 1);
 	input_writable[indx] = input_writable[indx];
 }
 
 [numthreads(8, 8, 4)]
-void ResidulePad1_2(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
+void ResidualPad1_2(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
 {
 	uint pad = 1, width = 16, depth = 256;
 	if (StdCheckRange(id, width + 2 * pad)) return;
@@ -1163,24 +1163,24 @@ void ResidulePad1_2(uint3 id : SV_DispatchThreadID) //id.xy=24  18x18x256
 }
 
 [numthreads(8,8,1)]
-void ResiduleConv1_2(uint3 id: SV_DispatchThreadID) //id.xy=16 18x18x256->16x16x256
+void ResidualConv1_2(uint3 id: SV_DispatchThreadID) //id.xy=16 18x18x256->16x16x256
 {
 	int input = 18, output = 16, depth = 256;
-	DefineResiduleConv(id, input, output, 1, 2)
+	DefineResidualConv(id, input, output, 1, 2)
 }
 
 [numthreads(256,THREAD_Y_256Z,1)]
-void ResiduleNormal1_2(uint3 id: SV_DispatchThreadID) //id.xy=16 16x16x256
+void ResidualNormal1_2(uint3 id: SV_DispatchThreadID) //id.xy=16 16x16x256
 {
 	uint width = 4, depth = 256, nwidth = 16;
 	StdDefineNormal(id, input_writable, decoder_conv0_statistic, width);
 }
 
 [numthreads(8,8,4)]
-void ResiduleInst1_2(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
+void ResidualInst1_2(uint3 id:SV_DispatchThreadID) //id.xy=16 16x16x256
 {
 	uint width = 16, depth = 256;
-	DefineResiduleInst(id, 1, 2);
+	DefineResidualInst(id, 1, 2);
 	input_writable[indx] += input_initial[indx];
 }
 
