@@ -1,4 +1,3 @@
-#include "../Noise/noise.cginc"
 #pragma kernel malloc_particle
 #pragma kernel clear_hash_grid
 #pragma kernel compute_hash_grid
