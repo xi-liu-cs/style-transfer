@@ -19,9 +19,9 @@ pressure,
 bound;
 RWStructuredBuffer<float3> force,
 velocity;
-RWStructuredBuffer<int> neighbor_list, /* neighbors of a particle at particle_index * max_particles_per_grid * 8 */
+RWStructuredBuffer<int> neighbor_list, /* neighbors of a particle at particle_index * max_particles_per_grid * n */
 neighbor_tracker; /* number of neighors does each particle have */
-RWStructuredBuffer<uint> hash_grid, /* aligned at particle_index * max_particles_per_grid * 8' + hash_grid_tracker[particle_index] */
+RWStructuredBuffer<uint> hash_grid, /* aligned at particle_index * max_particles_per_grid * n' + hash_grid_tracker[particle_index] */
 hash_grid_tracker; /* number of particles at each grid */
 
 float grid_size,
